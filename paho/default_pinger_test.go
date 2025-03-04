@@ -97,7 +97,7 @@ func TestDefaultPingerSuccess(t *testing.T) {
 	}
 }
 
-func TestDefaultPingerPacketSent(t *testing.T) {
+func TestDefaultPingerPacketSentReceived(t *testing.T) {
 	fakeClientConn, fakeServerConn := net.Pipe()
 
 	pinger := NewDefaultPinger()
@@ -110,7 +110,7 @@ func TestDefaultPingerPacketSent(t *testing.T) {
 		pingResult <- pinger.Run(ctx, fakeClientConn, 3)
 	}()
 
-	// keep calling PacketSent() in a goroutine to check that the Pinger avoids sending PINGREQs when not needed
+	// keep calling PacketSent() (and PacketReceived) in a goroutine to check that the Pinger avoids sending PINGREQs when not needed
 	stop := make(chan struct{})
 	go func() {
 		for {
@@ -119,8 +119,9 @@ func TestDefaultPingerPacketSent(t *testing.T) {
 				return
 			default:
 			}
-			// keep calling PacketSent()
+			// keep calling PacketSent() and PacketReceived
 			pinger.PacketSent()
+			pinger.PacketReceived()
 		}
 	}()
 	defer close(stop)
@@ -138,7 +139,7 @@ func TestDefaultPingerPacketSent(t *testing.T) {
 			if recv.Type == packets.PINGREQ {
 				count++
 				pinger.PingResp()
-				if count > 1 { // we allow the count to be 1 because the first PINGREQ is sent immediately
+				if count == 2 { // we allow the count to be 1 because the first PINGREQ is sent immediately
 					close(tooManyPingreqs)
 				}
 			}
@@ -153,6 +154,125 @@ func TestDefaultPingerPacketSent(t *testing.T) {
 		t.Errorf("expected DefaultPinger to not return error, got %v", err)
 	case <-time.After(10 * time.Second):
 		// PASS
+	}
+}
+
+// TestDefaultPingerPacketSentOnly - If packets are being sent, but nothing received, then a pingreq should be sent
+func TestDefaultPingerPacketSentOnly(t *testing.T) {
+	fakeClientConn, fakeServerConn := net.Pipe()
+
+	pinger := NewDefaultPinger()
+	pinger.SetDebug(paholog.NewTestLogger(t, "DefaultPinger:"))
+
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+	pingResult := make(chan error, 1)
+	go func() {
+		pingResult <- pinger.Run(ctx, fakeClientConn, 3)
+	}()
+
+	// keep calling PacketSent() (and PacketReceived) in a goroutine to check that the Pinger avoids sending PINGREQs when not needed
+	stop := make(chan struct{})
+	go func() {
+		for {
+			select {
+			case <-stop:
+				return
+			default:
+			}
+			// keep calling PacketSent()
+			pinger.PacketSent()
+		}
+	}()
+	defer close(stop)
+
+	// keep reading from fakeServerConn and call PingResp() when a PINGREQ is received
+	// if more than one PINGREQ is received, the test will fail
+	count := 0
+	twoPingreqs := make(chan struct{})
+	go func() {
+		for {
+			recv, err := packets.ReadPacket(fakeServerConn)
+			if err != nil {
+				return
+			}
+			if recv.Type == packets.PINGREQ {
+				count++
+				pinger.PingResp()
+				if count == 2 {
+					close(twoPingreqs)
+				}
+			}
+		}
+	}()
+	defer fakeServerConn.Close()
+
+	select {
+	case <-twoPingreqs:
+		// pass
+	case err := <-pingResult:
+		t.Errorf("expected DefaultPinger to not return error, got %v", err)
+	case <-time.After(10 * time.Second):
+		t.Error("expected DefaultPinger to send PINGREQs when no packets received")
+	}
+}
+
+// TestDefaultPingerPacketReceiveOnly - If packets are being received, but nothing sent, then a pingreq should be sent
+func TestDefaultPingerPacketReceiveOnly(t *testing.T) {
+	fakeClientConn, fakeServerConn := net.Pipe()
+
+	pinger := NewDefaultPinger()
+	pinger.SetDebug(paholog.NewTestLogger(t, "DefaultPinger:"))
+
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+	pingResult := make(chan error, 1)
+	go func() {
+		pingResult <- pinger.Run(ctx, fakeClientConn, 3)
+	}()
+
+	// keep calling PacketSent() (and PacketReceived) in a goroutine to check that the Pinger avoids sending PINGREQs when not needed
+	stop := make(chan struct{})
+	go func() {
+		for {
+			select {
+			case <-stop:
+				return
+			default:
+			}
+			pinger.PacketReceived()
+		}
+	}()
+	defer close(stop)
+
+	// keep reading from fakeServerConn and call PingResp() when a PINGREQ is received
+	// if more than one PINGREQ is received, the test will fail
+	count := 0
+	twoPingreqs := make(chan struct{})
+	go func() {
+		for {
+			recv, err := packets.ReadPacket(fakeServerConn)
+			if err != nil {
+				return
+			}
+			if recv.Type == packets.PINGREQ {
+				count++
+				pinger.PingResp()
+				if count == 2 {
+					close(twoPingreqs)
+				}
+			}
+		}
+	}()
+	defer fakeServerConn.Close()
+
+	select {
+	case <-twoPingreqs:
+		// pass
+	case err := <-pingResult:
+		t.Errorf("expected DefaultPinger to not return error, got %v", err)
+	case <-time.After(10 * time.Second):
+		t.Error("expected DefaultPinger to send PINGREQs when no packets sent")
 	}
 }
 

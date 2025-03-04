@@ -494,6 +494,7 @@ func (c *Client) incoming(ctx context.Context) {
 				go c.error(err)
 				return
 			}
+			c.config.PingHandler.PacketReceived()
 			switch recv.Type {
 			case packets.CONNACK:
 				c.debug.Println("received CONNACK (unexpected)")
