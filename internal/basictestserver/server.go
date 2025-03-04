@@ -98,6 +98,9 @@ func (t *TestServer) Run() {
 	for {
 		select {
 		case <-t.stop:
+			// Range incoming to ensure this closes before we shutdown (avoiding data race)
+			for range incoming {
+			}
 			return
 		case recv, ok := <-incoming:
 			if !ok {
