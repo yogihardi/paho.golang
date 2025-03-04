@@ -44,19 +44,24 @@ type TestServer struct {
 }
 
 func New(logger Logger) *TestServer {
+	// net.Pipe does not implement net.buffersWriter so packets may be mixed up if not wrapped
+	conn, clientConn := net.Pipe()
 	t := &TestServer{
-		stop:      make(chan struct{}),
-		done:      make(chan struct{}),
-		responses: make(map[byte]packets.Packet),
-		logger:    logger,
+		conn:       packets.NewThreadSafeConn(conn),
+		clientConn: packets.NewThreadSafeConn(clientConn),
+		stop:       make(chan struct{}),
+		done:       make(chan struct{}),
+		responses:  make(map[byte]packets.Packet),
+		logger:     logger,
 	}
-	t.conn, t.clientConn = net.Pipe()
+
 	if logger == nil {
 		t.logger = log.Default()
 	}
 	return t
 }
 
+// ClientConn returns a connection to be used when creating the Paho Client
 func (t *TestServer) ClientConn() net.Conn {
 	return t.clientConn
 }
@@ -65,6 +70,7 @@ func (t *TestServer) SetResponse(pt byte, p packets.Packet) {
 	t.responses[pt] = p
 }
 
+// SendPacket is used to send a packet to the client
 func (t *TestServer) SendPacket(p packets.Packet) error {
 	_, err := p.WriteTo(t.conn)
 

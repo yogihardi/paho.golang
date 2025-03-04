@@ -141,7 +141,7 @@ func TestQueuedMessages(t *testing.T) {
 		},
 	}
 
-	ctx, cancel := context.WithTimeout(context.Background(), longerDelay)
+	ctx, cancel := context.WithTimeout(context.Background(), longestDelay)
 	defer cancel()
 	cm, err := NewConnection(ctx, config)
 	if err != nil {
@@ -204,8 +204,8 @@ func TestQueuedMessages(t *testing.T) {
 	// Wait for all messages to be received
 	select {
 	case <-got200Messages:
-	case <-time.After(5 * longerDelay):
-		t.Fatal("timeout awaiting messages")
+	case <-time.After(longestDelay):
+		t.Fatalf("%s: timeout awaiting messages (got %d) ", time.Now(), len(receivedPublish)) // this is a data race but delay should prevent issues
 	}
 
 	// Disconnect

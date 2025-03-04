@@ -38,10 +38,12 @@ import (
 
 const shortDelay = 500 * time.Millisecond // Used when something should happen pretty quickly (increase when debugging)
 const longerDelay = time.Second           // Longer delay than above (for things like test wide context timeout)
+const longestDelay = 5 * longerDelay      // Used when queuing a lot of messages (extra time needed, especially when race detector active)
 
 // When debugging uncomment the below (to prevent tests terminating too quickly)
 // const shortDelay = time.Hour
 // const longerDelay = time.Hour
+// const longestDelay = time.Hour
 
 const dummyURL = "tcp://127.0.0.1:1883"
 
