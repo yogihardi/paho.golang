@@ -51,7 +51,7 @@ services:
       context: ../../../
       dockerfile: autopaho/examples/docker/subscriber/dockerfile
     environment:
-      subdemo_serverURL: ws://mosquitto:80
+      subdemo_serverURL: ws://mosquitto:8080
       subdemo_clientID: mqtt_subscriber
       subdemo_topic: topic1
       subdemo_qos: 1

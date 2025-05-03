@@ -39,8 +39,8 @@ This will display a lot of information (mosquitto is running with debug level lo
 docker-compose logs --follow sub
 ```
 
-Note: Messages received by the subscriber will be written to `shared/receivedMessages` (you may want to delete the
-contents of this file from time to time!).
+Note: Messages received by the subscriber will be written to `binds/sub/` if `subdemo_writeToDisk` is set to `true` in
+`docker-compose.yml`  (you may want to delete the contents of this file from time to time!).
 
 To stop everything run:
 
@@ -59,7 +59,7 @@ installed locally (edit the `docker-compose.yml` and change the `published` port
 You can simulate the loss of network connectivity by disconnecting the network adapter within a container. e.g.
 
 ```
-docker network disconnect lostpackets_test-net lostpackets_pub_1
-docker network connect lostpackets_test-net lostpackets_pub_1
+docker network disconnect lostpackets_test-net docker-pub-1
+docker network connect lostpackets_test-net docker-pub-1
 ```
   
