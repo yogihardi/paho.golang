@@ -21,6 +21,7 @@ import (
 	"io"
 	"net"
 	"reflect"
+	"strings"
 	"sync"
 	"testing"
 
@@ -155,11 +156,34 @@ func TestReadPacketConnect(t *testing.T) {
 
 func TestReadStringWriteString(t *testing.T) {
 	var b bytes.Buffer
-	writeString("Test string", &b)
+	const test1 = "Test string 世界" // include unicode
+	writeString(test1, &b)
 
 	s, err := readString(&b)
 	require.Nil(t, err)
-	assert.Equal(t, "Test string", s)
+	assert.Equal(t, test1, s)
+
+	// Long strings (over 65535 bytes) should be truncated (otherwise they will overrun the encoded length)
+	b.Reset()
+	overlengthStr := strings.Repeat("A", 65600) // longer than 2^16
+	writeString(overlengthStr, &b)
+	assert.Equal(t, 65537, b.Len()) // Two byte length so 65535 + 2 = 65537
+}
+
+func TestReadStringWriteBinary(t *testing.T) {
+	var b bytes.Buffer
+	const test1 = "Test string 世界" // include unicode
+	writeBinary([]byte(test1), &b)
+
+	s, err := readBinary(&b)
+	require.Nil(t, err)
+	assert.Equal(t, []byte(test1), s)
+
+	// Long blocks of data (over 65535 bytes) should be truncated (otherwise they will overrun the encoded length)
+	b.Reset()
+	overlengthStr := bytes.Repeat([]byte("A"), 65600) // longer than 2^16
+	writeBinary(overlengthStr, &b)
+	assert.Equal(t, 65537, b.Len()) // Two byte length so 65535 + 2 = 65537
 }
 
 func TestNewControlPacket(t *testing.T) {
