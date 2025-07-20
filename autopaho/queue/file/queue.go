@@ -64,8 +64,9 @@ func New(path string, prefix string, extension string) (*Queue, error) {
 	if _, err := os.Stat(path); err != nil {
 		if os.IsNotExist(err) {
 			folderExists = false
+		} else {
+			return nil, fmt.Errorf("stat on folder failed: %w", err)
 		}
-		return nil, fmt.Errorf("stat on folder failed: %w", err)
 	}
 	if !folderExists {
 		if err := os.MkdirAll(path, folderPermissions); err != nil {
