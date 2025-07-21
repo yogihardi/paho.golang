@@ -42,18 +42,8 @@ func New(path string, prefix string, extension string) (*Store, error) {
 		extension = "." + extension
 	}
 
-	folderExists := true
-	if _, err := os.Stat(path); err != nil {
-		if os.IsNotExist(err) {
-			folderExists = false
-		} else {
-			return nil, fmt.Errorf("stat on folder failed: %w", err)
-		}
-	}
-	if !folderExists {
-		if err := os.MkdirAll(path, folderPermissions); err != nil {
-			return nil, fmt.Errorf("failed to create store folder: %w", err)
-		}
+	if err := os.MkdirAll(path, folderPermissions); err != nil {
+		return nil, fmt.Errorf("failed to create store folder: %w", err)
 	}
 
 	// Better to fail fast; so we check that a file can be written/read with the passed in info
