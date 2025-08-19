@@ -23,8 +23,8 @@ import (
 	"net/url"
 	"time"
 
-	"github.com/eclipse/paho.golang/autopaho"
-	"github.com/eclipse/paho.golang/paho"
+	"github.com/yogihardi/paho.golang/autopaho"
+	"github.com/yogihardi/paho.golang/paho"
 )
 
 // subscribe connects to the server and subscribes to the test topic. It then expects to receive

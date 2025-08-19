@@ -23,8 +23,8 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/eclipse/paho.golang/autopaho"
-	"github.com/eclipse/paho.golang/paho"
+	"github.com/yogihardi/paho.golang/autopaho"
+	"github.com/yogihardi/paho.golang/paho"
 )
 
 const clientID = "PahoGoClient" // Change this to something random if using a public test server

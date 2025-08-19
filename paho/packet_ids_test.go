@@ -20,11 +20,11 @@ import (
 	"testing"
 	"time"
 
-	"github.com/eclipse/paho.golang/internal/basictestserver"
-	"github.com/eclipse/paho.golang/packets"
-	paholog "github.com/eclipse/paho.golang/paho/log"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	"github.com/yogihardi/paho.golang/internal/basictestserver"
+	"github.com/yogihardi/paho.golang/packets"
+	paholog "github.com/yogihardi/paho.golang/paho/log"
 )
 
 // TestPackedIdNoExhaustion tests interactions between Publish and the session ensuring that IDs are

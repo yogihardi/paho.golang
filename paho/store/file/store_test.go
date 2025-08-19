@@ -22,7 +22,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/eclipse/paho.golang/packets"
+	"github.com/yogihardi/paho.golang/packets"
 )
 
 // TestFileStore basic tests of the file store

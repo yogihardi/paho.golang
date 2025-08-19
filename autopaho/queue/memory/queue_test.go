@@ -22,7 +22,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/eclipse/paho.golang/autopaho/queue"
+	"github.com/yogihardi/paho.golang/autopaho/queue"
 )
 
 // TestMemoryQueue some basic tests of the queue

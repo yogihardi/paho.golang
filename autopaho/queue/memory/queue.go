@@ -21,7 +21,7 @@ import (
 	"io"
 	"sync"
 
-	"github.com/eclipse/paho.golang/autopaho/queue"
+	"github.com/yogihardi/paho.golang/autopaho/queue"
 )
 
 // A queue implementation that stores all data in RAM

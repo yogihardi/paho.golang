@@ -22,8 +22,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/eclipse/paho.golang/packets"
-	"github.com/eclipse/paho.golang/paho/log"
+	"github.com/yogihardi/paho.golang/packets"
+	"github.com/yogihardi/paho.golang/paho/log"
 )
 
 type Pinger interface {

@@ -28,12 +28,12 @@ import (
 	"testing"
 	"time"
 
-	"github.com/eclipse/paho.golang/internal/testserver"
-	"github.com/eclipse/paho.golang/packets"
-	paholog "github.com/eclipse/paho.golang/paho/log"
+	"github.com/yogihardi/paho.golang/internal/testserver"
+	"github.com/yogihardi/paho.golang/packets"
+	paholog "github.com/yogihardi/paho.golang/paho/log"
 	"go.uber.org/goleak"
 
-	"github.com/eclipse/paho.golang/paho"
+	"github.com/yogihardi/paho.golang/paho"
 )
 
 const shortDelay = 500 * time.Millisecond // Used when something should happen pretty quickly (increase when debugging)

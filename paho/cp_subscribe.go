@@ -15,7 +15,7 @@
 
 package paho
 
-import "github.com/eclipse/paho.golang/packets"
+import "github.com/yogihardi/paho.golang/packets"
 
 type (
 	// Subscribe is a representation of a MQTT subscribe packet

@@ -21,9 +21,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/eclipse/paho.golang/packets"
-	"github.com/eclipse/paho.golang/paho/session"
 	"github.com/stretchr/testify/assert"
+	"github.com/yogihardi/paho.golang/packets"
+	"github.com/yogihardi/paho.golang/paho/session"
 )
 
 // TestPacketIdAllocateAndFreeAll checks that we can allocate all packet identifiers and that, when freed, a message is always

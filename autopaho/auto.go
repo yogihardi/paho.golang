@@ -27,21 +27,21 @@ import (
 	"sync"
 	"time"
 
-	"github.com/eclipse/paho.golang/autopaho/queue"
-	"github.com/eclipse/paho.golang/autopaho/queue/memory"
-	"github.com/eclipse/paho.golang/packets"
-	"github.com/eclipse/paho.golang/paho/log"
-	"github.com/eclipse/paho.golang/paho/session/state"
 	"github.com/gorilla/websocket"
+	"github.com/yogihardi/paho.golang/autopaho/queue"
+	"github.com/yogihardi/paho.golang/autopaho/queue/memory"
+	"github.com/yogihardi/paho.golang/packets"
+	"github.com/yogihardi/paho.golang/paho/log"
+	"github.com/yogihardi/paho.golang/paho/session/state"
 
-	"github.com/eclipse/paho.golang/paho"
+	"github.com/yogihardi/paho.golang/paho"
 )
 
-// AutoPaho is a wrapper around github.com/eclipse/paho.golang that simplifies the connection process; it automates
+// AutoPaho is a wrapper around github.com/yogihardi/paho.golang that simplifies the connection process; it automates
 // connections (retrying until the connection comes up) and will attempt to re-establish the connection if it is lost.
 //
 // The aim is to cover a common requirement (connect to the server and try to keep the connection up); if your
-// requirements differ then please consider using github.com/eclipse/paho.golang directly (perhaps using the
+// requirements differ then please consider using github.com/yogihardi/paho.golang directly (perhaps using the
 // code in this file as a base; a secondary aim is to provide example code!).
 
 // ConnectionDownError Down will be returned when a request is made but the connection to the server is down
@@ -575,7 +575,7 @@ connectionLoop:
 					continue queueLoop
 				} else if err != nil {
 					// if Peek() keeps returning errors, we will loop forever.
-					// see https://github.com/eclipse/paho.golang/issues/234
+					// see https://github.com/yogihardi/paho.golang/issues/234
 					c.errors.Printf("error retrieving queue entry: %s", err)
 					time.Sleep(1 * time.Second)
 					continue

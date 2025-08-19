@@ -21,10 +21,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/eclipse/paho.golang/packets"
-	paholog "github.com/eclipse/paho.golang/paho/log"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	"github.com/yogihardi/paho.golang/packets"
+	paholog "github.com/yogihardi/paho.golang/paho/log"
 	"go.uber.org/goleak"
 )
 

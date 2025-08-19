@@ -15,7 +15,7 @@
 
 package paho
 
-import "github.com/eclipse/paho.golang/packets"
+import "github.com/yogihardi/paho.golang/packets"
 
 type (
 	// Unsuback is a representation of an MQTT Unsuback packet

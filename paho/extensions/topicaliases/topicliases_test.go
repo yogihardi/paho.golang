@@ -18,8 +18,8 @@ package topicaliases
 import (
 	"testing"
 
-	"github.com/eclipse/paho.golang/paho"
 	"github.com/stretchr/testify/assert"
+	"github.com/yogihardi/paho.golang/paho"
 )
 
 func TestTAHandler_PublishHook(t *testing.T) {

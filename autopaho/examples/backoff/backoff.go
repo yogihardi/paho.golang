@@ -19,7 +19,7 @@ import (
 	"fmt"
 	"math"
 
-	"github.com/eclipse/paho.golang/autopaho"
+	"github.com/yogihardi/paho.golang/autopaho"
 )
 
 func main() {
